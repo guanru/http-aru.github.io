@@ -1,4 +1,5 @@
-function ()({
+var music=new music();
+function (){
     const ap = new APlayer({
         container: document.getElementById('aplayer'),
         mini: true,
@@ -9,4 +10,4 @@ function ()({
             cover: 'http://p1.music.126.net/_49h1_Ye32sNb_XHSkJ4pg==/109951163188146216.jpg?param=130y130'
         }]
     });
-});
+};
