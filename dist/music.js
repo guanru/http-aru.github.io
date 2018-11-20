@@ -3,6 +3,7 @@
         mini: true,
         fixed: true,
         autoplay: true,
+        loop: 'all',
         audio: [{
             name: '慢慢喜欢你',
             artist: '莫文蔚',
