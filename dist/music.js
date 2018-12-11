@@ -4,6 +4,7 @@ const ap = new APlayer({
     //fixed: true,
     autoplay: false,
     //loop: 'all',
+    meting: true,
     audio: [{
         name: '慢慢喜欢你',
         artist: '莫文蔚',
