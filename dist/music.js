@@ -2,8 +2,10 @@ const ap = new APlayer({
     container: document.getElementById('aplayer'),
     //mini: true,
     //fixed: true,
-    autoplay: true,
+    autoplay: false,
     //loop: 'all',
+    preload: 'auto',
+    mutex: true,
     audio: [{
         name: '慢慢喜欢你',
         artist: '莫文蔚',

@@ -5,11 +5,11 @@
 <html lang="zh-CN" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 
 <head><meta name="generator" content="Hexo 3.8.0">
-    <title>Welcome - Colacoin&#39;s Blog</title>
+    <title>new和[alloc init]的区别 - Colacoin&#39;s Blog</title>
 <meta charset="utf-8">
 <meta name="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="Colacoin">
-<meta name="description" content="相逢即是有缘">
+<meta name="description" content="new和[alloc init]在功能上几乎是一致的,那么他们到底有什么区别呢。">
 <meta name="keywords" content="Colacoin,coin,道哥倩,博客">
 
 
@@ -32,7 +32,7 @@
 	</script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
-<link rel="stylesheet" href="/css/journal.css?9581922">
+<link rel="stylesheet" href="/css/journal.css?90467285">
 <script src="/js/loadCSS.js"></script>
 <script>
     loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Material+Icons");
@@ -184,12 +184,12 @@
 <div ref="streamContainer" class="stream-container">
     <div class="post-list-container post-list-container-shadow">
         <div class="post">
-            <div class="post-head-wrapper" style="background-image: url('/2018/11/13/Welcome/02.jpeg')">
+            <div class="post-head-wrapper" style="background-image: url('/2018/12/19/new和-alloc-init-的区别/0007.jpeg')">
                 <div class="post-title">
-                    Welcome
+                    new和[alloc init]的区别
                     <div class="post-meta">
-                        <time datetime="2018-11-13T07:42:06.000Z" itemprop="datePublished">
-                            2018-11-13 15:42
+                        <time datetime="2018-12-19T14:44:46.000Z" itemprop="datePublished">
+                            2018-12-19 22:44
                         </time>&nbsp;
                         
     
@@ -197,7 +197,9 @@
                         
                         <i class="material-icons" style="">label</i>
                         
-                        <a href="/tags/Welcome/">Welcome</a>
+                        <a href="/tags/iOS/">iOS</a>, 
+                        
+                        <a href="/tags/Objective-C/">Objective-C</a>
                         
                         
                     </div>
@@ -206,19 +208,24 @@
     
             <div class="post-body-wrapper">
                 <div class="post-body">
-                    <p>Hello~ 欢迎来到我的博客<br><a id="more"></a><br><strong>新工作转正之际，颇有感慨，试用期充实至今，收获丰硕。于是想到要寻找一个平台，可以让我码几个字，总结日常收获，记录一下偶尔大脑神来之灵光，可是找来找去，试了几个都没有找到一个我特别欢喜的平台，可能是我有些挑剔（其实就是事儿多，哈哈），最终决定，自己动手搭建了这个<a href="xqxqxq.top">页面</a>，添加了自己的域名，以后将于此处，开始码字历程。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">各位客官，能来此一览，已是缘分，希望能有只言片语对您有用~</span><br></pre></td></tr></table></figure></p>
-<p>本博客摸索修改全新主题<a href="https://github.com/SumiMakito/hexo-theme-journal/" target="_blank" rel="noopener">Journal</a>而来，感谢博主<a href="https://mak1t0.cc/" target="_blank" rel="noopener">Makito</a>！</p>
+                    <p>new和[alloc init]在功能上几乎是一致的,那么他们到底有什么区别呢。</p>
+<a id="more"></a>
+<p>在实际开发过程中，我们看到的基本都是<strong>[[className alloc] init]</strong>,能够看到使用<strong>new</strong>的场合很少，这是为什么呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">+ new &#123; //new方法</span><br><span class="line">	id newObject = (*_alloc)((Class)self, 0); </span><br><span class="line">	Class metaClass = self-&gt;isa; </span><br><span class="line">	if (class_getVersion(metaClass) &gt; 1) </span><br><span class="line">		return [newObject init]; </span><br><span class="line">	else </span><br><span class="line">	return newObject; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">//alloc、init方法</span><br><span class="line">+ alloc &#123; </span><br><span class="line">	return (*_zoneAlloc)((Class)self, 0, malloc_default_zone());  </span><br><span class="line">&#125; </span><br><span class="line">- init &#123; </span><br><span class="line">	return self; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对比代码发现，只是alloc分配内存时使用了zone,查询了解到，这个做法是为了在给对象分配内存的时候，将关联的对象分配到一个相邻的内存区域内，以便于调用时消耗尽量小的代价，提升程序处理速度。<br>看到这里还是有点蒙，继续查阅资料终于找到答案，如果使用new方法，那么初始化方法是在new方法内部默认调用init方法的，限制性太高，无法使用initName自定义初始化方法，很不方便，早期开发者们发现“显示调用总比隐式调用要好”，由此就将其分开写成两个方法[alloc init];</p>
+<blockquote>
+<p>new 和 [alloc init]功能基本一致，区别只在于new只能使用默认初始化方法，而alloc的方式可以调用自定义的初始化方法;</p>
+</blockquote>
 
                 </div>
             </div>
     
             <nav class="post-pagination">
     
-    <a class="newer-posts" href="/2018/12/02/self-和-的区别/">
-        上一篇<br>self.和_的区别
-    </a>
-    
     <span class="page-number"></span>
+    
+    <a class="older-posts" href="/2018/12/02/测试文章/">
+        下一篇<br>测试文章
+    </a>
     
 </nav>
 
@@ -243,7 +250,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js" integrity="sha256-FtWfRI+thWlNz2sB3SJbwKx5PgMyKIVgwHCTwa3biXc=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/smooth-scroll@14.2.1/dist/smooth-scroll.polyfills.min.js" integrity="sha256-CI4Gq5E0io1Pv0xM3qPM+NUIOhbIBvC3GiN1Y4KhXpw=" crossorigin="anonymous"></script>
-<script src="/js/journal.js?97454623"></script>
+<script src="/js/journal.js?10321978"></script>
 
 
 

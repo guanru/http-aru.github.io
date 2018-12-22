@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://xqxqxq.top/"/>
-  <updated>2018-12-10T14:06:26.542Z</updated>
+  <updated>2018-12-22T08:06:47.354Z</updated>
   <id>https://xqxqxq.top/</id>
   
   <author>
@@ -17,11 +17,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>new和[alloc init]的区别</title>
+    <link href="https://xqxqxq.top/2018/12/19/new%E5%92%8C-alloc-init-%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+    <id>https://xqxqxq.top/2018/12/19/new和-alloc-init-的区别/</id>
+    <published>2018-12-19T14:44:46.000Z</published>
+    <updated>2018-12-22T08:06:47.354Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>new和[alloc init]在功能上几乎是一致的,那么他们到底有什么区别呢。</p><a id="more"></a><p>在实际开发过程中，我们看到的基本都是<strong>[[className alloc] init]</strong>,能够看到使用<strong>new</strong>的场合很少，这是为什么呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">+ new &#123; //new方法</span><br><span class="line">id newObject = (*_alloc)((Class)self, 0); </span><br><span class="line">Class metaClass = self-&gt;isa; </span><br><span class="line">if (class_getVersion(metaClass) &gt; 1) </span><br><span class="line">return [newObject init]; </span><br><span class="line">else </span><br><span class="line">return newObject; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">//alloc、init方法</span><br><span class="line">+ alloc &#123; </span><br><span class="line">return (*_zoneAlloc)((Class)self, 0, malloc_default_zone());  </span><br><span class="line">&#125; </span><br><span class="line">- init &#123; </span><br><span class="line">return self; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>对比代码发现，只是alloc分配内存时使用了zone,查询了解到，这个做法是为了在给对象分配内存的时候，将关联的对象分配到一个相邻的内存区域内，以便于调用时消耗尽量小的代价，提升程序处理速度。<br>看到这里还是有点蒙，继续查阅资料终于找到答案，如果使用new方法，那么初始化方法是在new方法内部默认调用init方法的，限制性太高，无法使用initName自定义初始化方法，很不方便，早期开发者们发现“显示调用总比隐式调用要好”，由此就将其分开写成两个方法[alloc init];</p><blockquote><p>new 和 [alloc init]功能基本一致，区别只在于new只能使用默认初始化方法，而alloc的方式可以调用自定义的初始化方法;</p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;new和[alloc init]在功能上几乎是一致的,那么他们到底有什么区别呢。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="https://xqxqxq.top/tags/iOS/"/>
+    
+      <category term="Objective-C" scheme="https://xqxqxq.top/tags/Objective-C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>测试文章</title>
     <link href="https://xqxqxq.top/2018/12/02/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
     <id>https://xqxqxq.top/2018/12/02/测试文章/</id>
     <published>2018-12-02T15:43:48.000Z</published>
-    <updated>2018-12-10T14:06:26.542Z</updated>
+    <updated>2018-12-14T03:32:05.091Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="这是第三篇测试"><a href="#这是第三篇测试" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-1"><a href="#这是第三篇测试-1" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-2"><a href="#这是第三篇测试-2" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><a id="more"></a><h2 id="这是第三篇测试-3"><a href="#这是第三篇测试-3" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-4"><a href="#这是第三篇测试-4" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-5"><a href="#这是第三篇测试-5" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-6"><a href="#这是第三篇测试-6" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-7"><a href="#这是第三篇测试-7" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-8"><a href="#这是第三篇测试-8" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-9"><a href="#这是第三篇测试-9" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-10"><a href="#这是第三篇测试-10" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-11"><a href="#这是第三篇测试-11" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-12"><a href="#这是第三篇测试-12" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-13"><a href="#这是第三篇测试-13" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2><h2 id="这是第三篇测试-14"><a href="#这是第三篇测试-14" class="headerlink" title="这是第三篇测试"></a>这是第三篇测试</h2>]]></content>
     
